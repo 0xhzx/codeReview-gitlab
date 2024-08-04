@@ -1,0 +1,11 @@
+/logs/
+logs
+app/mrmax.py
+db
+/venv/
+/models
+.env
+.pid_generation_model
+llama.log
+*/__pycache__/
+__pycache__

@@ -6,7 +6,6 @@ from config.config import WEBHOOK_VERIFY_TOKEN
 from service.chat_review import review_code, review_code_for_mr, review_code_for_add_commit
 from utils.logger import log
 from app.gitlab_utils import get_commit_list, get_merge_request_id, get_commit_change_file
-from utils.dingding import send_dingtalk_message_by_sign
 
 git = Blueprint('git', __name__)
 

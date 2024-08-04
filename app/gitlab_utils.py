@@ -2,7 +2,6 @@ import requests
 from retrying import retry
 from config.config import *
 from utils.logger import log
-from utils.dingding import send_dingtalk_message_by_sign
 
 @retry(stop_max_attempt_number=3, wait_fixed=2000)
 def get_merge_request_id(branch_name, project_id):

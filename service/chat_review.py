@@ -6,7 +6,6 @@ from app.gitlab_utils import *
 from config.config import gitlab_server_url, gitlab_private_token, openai_api_key, openai_baseurl, openai_model_name
 from service.content_handle import filter_diff_content
 from utils.logger import log
-from utils.dingding import send_dingtalk_message_by_sign
 
 headers = {
     "PRIVATE-TOKEN": gitlab_private_token,

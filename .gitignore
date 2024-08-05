@@ -9,3 +9,7 @@ db
 llama.log
 */__pycache__/
 __pycache__
+.devcontainer
+.pytest_cache
+.ruff_cache
+.coverage

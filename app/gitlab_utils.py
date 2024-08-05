@@ -3,6 +3,7 @@ from retrying import retry
 from config.config import *
 from utils.logger import log
 
+
 @retry(stop_max_attempt_number=3, wait_fixed=2000)
 def get_merge_request_id(branch_name, project_id):
     """
@@ -16,7 +17,7 @@ def get_merge_request_id(branch_name, project_id):
 
     params = {
         "source_branch": branch_name,
-        "state": "opened"  # Can be opened, closed, locked, merged...
+        "state": "opened",  # Can be opened, closed, locked, merged...
     }
     headers = {"Private-Token": gitlab_private_token}
     response = requests.get(url, params=params, headers=headers)
@@ -26,11 +27,13 @@ def get_merge_request_id(branch_name, project_id):
         merge_requests = response.json()
         if len(merge_requests) > 0:
             log.info(f"Branch '{branch_name}' exists MR record.{merge_requests}")
-            return merge_requests[0].get('iid')
+            return merge_requests[0].get("iid")
         else:
             log.info(f"Branch '{branch_name}' has no unclosed MR.")
     else:
-        log.error(f"Fetch branch'{branch_name}' failed! Status code: {response.status_code}")
+        log.error(
+            f"Fetch branch'{branch_name}' failed! Status code: {response.status_code}"
+        )
     return None
 
 
@@ -52,7 +55,7 @@ def get_commit_list(merge_request_iid, project_id):
         for commit in commits:
             print(f"Commit ID: {commit['id']}, Message: {commit['message']}")
             # Append the commit ID to the list
-            commit_list.append(commit['id'])
+            commit_list.append(commit["id"])
     else:
         # Log an error if the API call was unsuccessful
         log.error(f"Failed to fetch commits. Status code: {response.status_code}")
@@ -66,9 +69,7 @@ def get_merge_request_changes(project_id, merge_id):
     url = f"{gitlab_server_url}/api/v4/projects/{project_id}/merge_requests/{merge_id}/changes"
 
     # Headers for the request
-    headers = {
-        "PRIVATE-TOKEN": gitlab_private_token
-    }
+    headers = {"PRIVATE-TOKEN": gitlab_private_token}
 
     # Make the GET request
     response = requests.get(url, headers=headers)
@@ -94,28 +95,31 @@ def add_comment_to_mr(project_id, merge_request_id, comment):
     """
     headers = {
         "Private-Token": gitlab_private_token,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
     url = f"{gitlab_server_url}/api/v4/projects/{project_id}/merge_requests/{merge_request_id}/notes"
-    data = {
-        "body": comment
-    }
+    data = {"body": comment}
 
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 201:
-        log.info(f"Comment message sent successfully: project_id:{project_id}  merge_request_id:{merge_request_id}")
+        log.info(
+            f"Comment message sent successfully: project_id:{project_id}  merge_request_id:{merge_request_id}"
+        )
         return response.json()
     else:
-        log.error(f"Comment message sent successfully: project_id:{project_id}  merge_request_id:{merge_request_id} response:{response}")
-        send_dingtalk_message_by_sign(f"Comment message sent successfully: project_id:{project_id}  merge_request_id:{merge_request_id} response:{response}")
+        log.error(
+            f"Comment message sent successfully: project_id:{project_id}  merge_request_id:{merge_request_id} response:{response}"
+        )
         response.raise_for_status()
 
 
-
 @retry(stop_max_attempt_number=3, wait_fixed=2000)
-def get_mr_comment_info(project_id, mr_iid, ):
+def get_mr_comment_info(
+    project_id,
+    mr_iid,
+):
     url = f"{gitlab_server_url}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/notes"
 
     # Add the private token in the header
@@ -126,8 +130,8 @@ def get_mr_comment_info(project_id, mr_iid, ):
     if response.status_code == 200:
         comments = response.json()
         for comment in comments:
-            author = comment['author']['username']
-            comment_text = comment['body']
+            author = comment["author"]["username"]
+            comment_text = comment["body"]
             print(f"Author: {author}")
             print(f"Comment: {comment_text}")
             comments_info += comment_text
@@ -139,13 +143,13 @@ def get_mr_comment_info(project_id, mr_iid, ):
 
 @retry(stop_max_attempt_number=3, wait_fixed=2000)
 def get_commit_change_file(push_info):
-    commits = push_info['commits']
+    commits = push_info["commits"]
     add_file = []
     modify_file = []
     # Get the added and modified files for each commit
     for commit in commits:
-        added_files = commit.get('added', [])
-        modified_files = commit.get('modified', [])
+        added_files = commit.get("added", [])
+        modified_files = commit.get("modified", [])
         add_file += added_files
         modify_file += modified_files
 

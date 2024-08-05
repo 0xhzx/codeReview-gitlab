@@ -2,7 +2,7 @@
 
 # Final Project - LLM-CodeReview-Gitlab
 
-Link to my final demo video
+Link to my final demo video: https://youtu.be/8hwNKeqkpPY
 
 ## Requirements:
 
@@ -35,8 +35,8 @@ If you want to use cloud platform to run the application such as GCP, you can fo
     5. run the LLM in the background: `bash app.sh`
     6. run tests before deployment: `make test`
     7. run the code-review app: `python3 app.py`
-
-
+![alt text](images/image-7.png)
+![alt text](images/image-8.png)
 
 - Performance/evaluation results
 
